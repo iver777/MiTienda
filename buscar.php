@@ -1,30 +1,18 @@
-
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Tienda</title>
-</head>
-<body>
-    <h1>Inventario</h1>
-    <form method ="post" action="buscar.php">
-	<div>
-		<input type="text" name="buscar" placeholder="codigo del producto" required title="es necesario llenar este campo" >
-		<input type="submit" value="buscar">	
-	</div>
-	
-</form>
-
 <?php
-//include(".\Vista\head.php");
 
-
-
+$buscar=$_POST['buscar'];
 $conexion=mysqli_connect("localhost","root","","mitienda");
-$consulta="SELECT * FROM producto";
-$result=mysqli_query($conexion,$consulta);
+$peticion="SELECT * FROM producto WHERE CODIGO_BARRAS LIKE '%".$buscar."%'";
+$resultado=mysqli_query($conexion,$peticion);
+	$vacio=mysqli_num_rows($resultado);
+if($vacio==0){
+	echo '<script type="text/javascript">
+			alert("no se encontro ningun articulo");
+			window.location="index.php";
+			</script>';
 
+}
+echo"<p><h1><a href=index.php>Inventario</a></h1></p>";
 echo "<table border='1'>";
 echo '<tr onmouseout=this.style.background="#AAB7B8">';
 
@@ -43,14 +31,12 @@ echo "<th>Ingreso</th>";
 echo "<th>Salida</th>";
 
 echo "</tr>";
-?>
-<?php
 
-while ($row=mysqli_fetch_row($result)) {
+
+while ($row=mysqli_fetch_array($resultado)) {
 	echo 
 	'<tr bgcolor="#DDDDDD" onmouseover=this.style.background="#FDFEFE" onmouseout=this.style.background="#DDDDDD">'.
-	//"<td>".$row[0]."</td>".
-	//"<td>".$row[1]."</td>".
+	
 	"<td>".$row[1]."</td>".
 	"<td>".$row[2]."</td>".
 	"<td>".$row[3]."</td>".
@@ -72,5 +58,3 @@ while ($row=mysqli_fetch_row($result)) {
 echo "</table>";
 
 ?>
-</body>
-</html>
